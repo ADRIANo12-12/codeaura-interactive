@@ -1,40 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Page</title>
+</head>
+<body>
+  <!-- Welcome Screen -->
+  <div class="welcome-screen">
+    <h1>Welcome to CodeAura</h1>
+    <p>Loading your experience...</p>
+  </div>
+
+  <!-- Loading Screen -->
+  <div class="loading-screen">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <h1>CodeAura Interactive</h1>
+    <p>Explore the interactive features below</p>
+    <a href="#get-started">Get Started</a>
+  </header>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <div class="tab active" data-tab="tab1">Tab 1</div>
+    <div class="tab" data-tab="tab2">Tab 2</div>
+    <div class="tab" data-tab="tab3">Tab 3</div>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="tab-content active" id="tab1"></div>
 <style>
-  /* General Reset */
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-
-  body {
-    background-color: #0d1117;
-    color: #c9d1d9;
-    font-family: 'Roboto', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    min-height: 100vh;
-    margin: 0;
-  }
-
-  /* Welcome Screen */
-  .welcome-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #0d1117;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    z-index: 1000;
-    animation: fadeOut 1.5s ease-in-out forwards;
-    animation-delay: 3s;
-  }
-
   .welcome-screen h1 {
     font-size: 3rem;
     color: #58a6ff;
@@ -264,4 +263,6 @@
   .modal-content button:hover {
     background-color: #1f6feb;
   }
-</style>
+  </style>
+</head>
+<body>
