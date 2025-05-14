@@ -50,57 +50,100 @@
       background-color: #1f6feb;
       color: #ffffff;
     }
-    main {
-      width: 90%;
-      max-width: 800px;
-      margin-top: 40px;
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
     }
-    section {
-      margin-bottom: 40px;
+    .tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      background-color: #161b22;
+      color: #c9d1d9;
+      border-radius: 5px;
+      margin: 0 5px;
+      transition: background-color 0.3s ease;
+    }
+    .tab.active {
+      background-color: #58a6ff;
+      color: #0d1117;
+    }
+    .tab:hover {
+      background-color: #1f6feb;
+    }
+    .tab-content {
+      display: none;
+      margin-top: 20px;
       padding: 20px;
       background-color: #161b22;
       border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     }
-    section h2 {
-      color: #58a6ff;
-      margin-bottom: 10px;
+    .tab-content.active {
+      display: block;
     }
-    section p {
-      color: #8b949e;
+    .form-container {
+      margin-top: 40px;
+      text-align: center;
     }
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 2em;
-      }
-      p {
-        font-size: 1em;
-      }
-      a {
-        font-size: 0.9em;
-        padding: 8px 16px;
-      }
-      section {
-        padding: 15px;
-      }
+    .form-container button {
+      padding: 10px 20px;
+      background-color: #58a6ff;
+      color: #0d1117;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
     }
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.8em;
-      }
-      p {
-        font-size: 0.9em;
-      }
-      a {
-        font-size: 0.8em;
-        padding: 6px 12px;
-      }
-      section {
-        padding: 10px;
-      }
+    .form-container button:hover {
+      background-color: #1f6feb;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      justify-content: center;
+      align-items: center;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      background-color: #161b22;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+    .modal-content input {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #c9d1d9;
+      border-radius: 5px;
+      background-color: #0d1117;
+      color: #c9d1d9;
+    }
+    .modal-content button {
+      padding: 10px 20px;
+      background-color: #58a6ff;
+      color: #0d1117;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+    }
+    .modal-content button:hover {
+      background-color: #1f6feb;
     }
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <header>
@@ -110,15 +153,60 @@
       <a href="https://github.com/your-repo-link" target="_blank">View on GitHub</a>
     </div>
   </header>
-  <main>
-    <section id="about-me">
-      <h2>About Me</h2>
-      <p>I'm Adrian Sikora from Poland (; . I'm currently 13 y/o my passion and hobby is programming, i started programing in 2019 so it was 6 years ago, and til now i didn't get bored with it. I'm good at python, html,c , c++ <- (I don't like that), java, javascript, css, some assembly, arduino, kotlin, rust. Those are programming languages that i was curios about and watched a few tutorials but C, python, html and java but last time i used java about half a year ago so i don't use it much. I like C < Luv it❤️. Using Linux is my passion thats what i would say and python html javascript and css yes i'm using. I did a few Operating systems wich were made in C - 🫀. Each one (i made 3 in c and one in C++) took me min. one month and max. half a year. This OS in C++ is not public and it's my biggest project it's got about 489k lines of code and i started making it in 2022 in june and started stopping improving it in 2024. That project (more debbuging it) made me hate it.</p>
-    </section>
-    <section id="studio-info">
-      <h2>Studio Info</h2>
-      <p>CodeAura Interactive is a one person studio that is publishing it's small or bigger projects, we just started so page and other things may be not working good, but as i say it's just a one person studio. we make games code like for example moving script to godot in .gd or file system in c. better c wich is still work in progress but i can say that it's a c improvement that i am making.</p>
-    </section>
-  </main>
+  <div class="tabs">
+    <div class="tab active" data-tab="about-me">About Me</div>
+    <div class="tab" data-tab="studio-info">Studio Info</div>
+  </div>
+  <div id="about-me" class="tab-content active">
+    <h2>About Me</h2>
+    <p>I'm Adrian Sikora from Poland (; . I'm currently 13 y/o my passion and hobby is programming...</p>
+  </div>
+  <div id="studio-info" class="tab-content">
+    <h2>Studio Info</h2>
+    <p>CodeAura Interactive is a one person studio that is publishing its small or bigger projects...</p>
+  </div>
+  <div class="form-container">
+    <button onclick="openModal('login')">Log In</button>
+    <button onclick="openModal('register')">Register</button>
+  </div>
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <h2>Log In</h2>
+      <input type="text" placeholder="Username">
+      <input type="password" placeholder="Password">
+      <button>Submit</button>
+      <button onclick="closeModal()">Close</button>
+    </div>
+  </div>
+  <div id="register-modal" class="modal">
+    <div class="modal-content">
+      <h2>Register</h2>
+      <input type="text" placeholder="Username">
+      <input type="email" placeholder="Email">
+      <input type="password" placeholder="Password">
+      <button>Submit</button>
+      <button onclick="closeModal()">Close</button>
+    </div>
+  </div>
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(tc => tc.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    function openModal(type) {
+      document.getElementById(`${type}-modal`).classList.add('active');
+    }
+
+    function closeModal() {
+      document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('active'));
+    }
+  </script>
 </body>
 </html></div>
