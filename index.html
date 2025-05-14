@@ -1,206 +1,267 @@
-<!DOCTYPE html>
-<html lang="en"></html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CodeAura Interactive</title>
-  <style>
-    body {
-      background-color: #0d1117;
-      color: #c9d1d9;
-      font-family: 'Roboto', sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-    }
-    .welcome-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: #0d1117;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      z-index: 1000;
-      animation: fadeOut 1.5s ease-in-out forwards;
-      animation-delay: 3s;
-    }
-    .welcome-screen h1 {
-      font-size: 3em;
-      color: #58a6ff;
-      text-shadow: 0 4px 10px rgba(88, 166, 255, 0.5);
-      animation: fadeIn 1.5s ease-in-out;
-    }
-    .welcome-screen p {
-      font-size: 1.5em;
-      color: #8b949e;
-      margin-top: 10px;
-      animation: fadeIn 1.5s ease-in-out;
-      animation-delay: 0.5s;
-    }
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-    @keyframes fadeOut {
-      from {
-        opacity: 1;
-      }
-      to {
-        opacity: 0;
-        visibility: hidden;
-      }
-    }
-    .loading-screen {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.8);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-      display: none;
-    }
-    .loading-screen.active {
-      display: flex;
-    }
-    .loading-screen .spinner {
-      border: 4px solid #c9d1d9;
-      border-top: 4px solid #58a6ff;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      animation: spin 1s linear infinite;
-    }
-    @keyframes spin {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="welcome-screen">
-    <h1>Welcome to CodeAura</h1>
-    <p>Loading...</p>
-  </div>
-  <div class="loading-screen" id="loading-screen"></div>
-    <div class="spinner"></div>
-  </div>
-  <header>
-    <h1>Welcome to CodeAura Interactive</h1>
-    <p>One mind. Infinite code.</p>
-    <div class="button"></div>
-      <a href="https://github.com/your-repo-link" target="_blank">View on GitHub</a>
-    </div>
-  </header>
-  <div class="tabs"></div>
-    <div class="tab active" data-tab="about-me">About Me</div>
-    <div class="tab" data-tab="studio-info">Studio Info</div>
-  </div>
-  <div id="about-me" class="tab-content active"></div>
-    <h2>About Me</h2>
-    <p>I'm Adrian Sikora from Poland (; . I'm currently 13 y/o my passion and hobby is programming...</p>
-  </div>
-  <div id="studio-info" class="tab-content">
-    <h2>Studio Info</h2>
-    <p>CodeAura Interactive is a one person studio that is publishing its small or bigger projects...</p>
-  </div>
-  <div class="form-container"></div>
-    <button onclick="openModal('login')">Log In</button>
-    <button onclick="openModal('register')">Register</button>
-  </div>
-  <div id="login-modal" class="modal"></div>
-    <div class="modal-content">
-      <h2>Log In</h2>
-      <input type="text" id="login-username" placeholder="Username">
-      <input type="password" id="login-password" placeholder="Password">
-      <button onclick="login()">Submit</button>
-      <button onclick="closeModal()">Close</button>
-    </div>
-  </div>
-  <div id="register-modal" class="modal">
-    <div class="modal-content">
-      <h2>Register</h2>
-      <input type="text" id="register-username" placeholder="Username">
-      <input type="email" id="register-email" placeholder="Email">
-      <input type="password" id="register-password" placeholder="Password">
-      <button onclick="register()">Submit</button>
-      <button onclick="closeModal()">Close</button>
-    </div>
-  </div>
-  <script>
-    const tabs = document.querySelectorAll('.tab');
-    const tabContents = document.querySelectorAll('.tab-content');
-    const loadingScreen = document.getElementById('loading-screen');
-    const users = [];
+<style>
+  /* General Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        tabs.forEach(t => t.classList.remove('active'));
-        tabContents.forEach(tc => tc.classList.remove('active'));
-        tab.classList.add('active');
-        document.getElementById(tab.dataset.tab).classList.add('active');
-      });
-    });
+  body {
+    background-color: #0d1117;
+    color: #c9d1d9;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 100vh;
+    margin: 0;
+  }
 
-    function openModal(type) {
-      document.getElementById(`${type}-modal`).classList.add('active');
+  /* Welcome Screen */
+  .welcome-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #0d1117;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 1000;
+    animation: fadeOut 1.5s ease-in-out forwards;
+    animation-delay: 3s;
+  }
+
+  .welcome-screen h1 {
+    font-size: 3rem;
+    color: #58a6ff;
+    text-shadow: 0 4px 10px rgba(88, 166, 255, 0.5);
+    animation: fadeIn 1.5s ease-in-out;
+  }
+
+  .welcome-screen p {
+    font-size: 1.5rem;
+    color: #8b949e;
+    margin-top: 10px;
+    animation: fadeIn 1.5s ease-in-out;
+    animation-delay: 0.5s;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
     }
-
-    function closeModal() {
-      document.querySelectorAll('.modal').forEach(modal => modal.classList.remove('active'));
+    to {
+      opacity: 1;
     }
+  }
 
-    function register() {
-      const username = document.getElementById('register-username').value;
-      const email = document.getElementById('register-email').value;
-      const password = document.getElementById('register-password').value;
-
-      if (username && email && password) {
-        users.push({ username, email, password });
-        alert('Registration successful!');
-        closeModal();
-      } else {
-        alert('Please fill in all fields.');
-      }
+  @keyframes fadeOut {
+    from {
+      opacity: 1;
     }
-
-    function login() {
-      const username = document.getElementById('login-username').value;
-      const password = document.getElementById('login-password').value;
-
-      const user = users.find(user => user.username === username && user.password === password);
-      if (user) {
-        alert('Login successful!');
-        closeModal();
-      } else {
-        alert('Invalid username or password.');
-      }
+    to {
+      opacity: 0;
+      visibility: hidden;
     }
+  }
 
-    window.onload = () => {
-      setTimeout(() => {
-        document.querySelector('.welcome-screen').style.display = 'none';
-      }, 3000);
-    };
-  </script>
-</body>
-</html>
+  /* Loading Screen */
+  .loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+  }
+
+  .loading-screen.active {
+    display: flex;
+  }
+
+  .loading-screen .spinner {
+    border: 4px solid #c9d1d9;
+    border-top: 4px solid #58a6ff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  /* Header */
+  header {
+    text-align: center;
+    margin: 20px 0;
+  }
+
+  header h1 {
+    font-size: 2.5rem;
+    color: #58a6ff;
+  }
+
+  header p {
+    font-size: 1.2rem;
+    color: #8b949e;
+  }
+
+  header a {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #58a6ff;
+    color: #0d1117;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+
+  header a:hover {
+    background-color: #1f6feb;
+  }
+
+  /* Tabs */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+  }
+
+  .tab {
+    padding: 10px 20px;
+    margin: 0 5px;
+    background-color: #21262d;
+    color: #c9d1d9;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .tab.active {
+    background-color: #58a6ff;
+    color: #0d1117;
+  }
+
+  .tab:hover {
+    background-color: #1f6feb;
+  }
+
+  .tab-content {
+    display: none;
+    text-align: center;
+    margin: 20px;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+
+  .tab-content h2 {
+    font-size: 2rem;
+    color: #58a6ff;
+    margin-bottom: 10px;
+  }
+
+  .tab-content p {
+    font-size: 1.2rem;
+    color: #8b949e;
+  }
+
+  /* Form Container */
+  .form-container {
+    margin: 20px 0;
+    text-align: center;
+  }
+
+  .form-container button {
+    margin: 5px;
+    padding: 10px 20px;
+    background-color: #58a6ff;
+    color: #0d1117;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .form-container button:hover {
+    background-color: #1f6feb;
+  }
+
+  /* Modals */
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+
+  .modal.active {
+    display: flex;
+  }
+
+  .modal-content {
+    background-color: #21262d;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .modal-content h2 {
+    font-size: 1.8rem;
+    color: #58a6ff;
+    margin-bottom: 20px;
+  }
+
+  .modal-content input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #30363d;
+    border-radius: 5px;
+    background-color: #0d1117;
+    color: #c9d1d9;
+  }
+
+  .modal-content button {
+    margin: 5px;
+    padding: 10px 20px;
+    background-color: #58a6ff;
+    color: #0d1117;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .modal-content button:hover {
+    background-color: #1f6feb;
+  }
+</style>
