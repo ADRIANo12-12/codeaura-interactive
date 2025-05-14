@@ -3,266 +3,220 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Page</title>
-</head>
-<body>
-  <!-- Welcome Screen -->
-  <div class="welcome-screen">
-    <h1>Welcome to CodeAura</h1>
-    <p>Loading your experience...</p>
-  </div>
-
-  <!-- Loading Screen -->
-  <div class="loading-screen">
-    <div class="spinner"></div>
-  </div>
-
-  <!-- Header -->
-  <header>
-    <h1>CodeAura Interactive</h1>
-    <p>Explore the interactive features below</p>
-    <a href="#get-started">Get Started</a>
-  </header>
-
-  <!-- Tabs -->
-  <div class="tabs">
-    <div class="tab active" data-tab="tab1">Tab 1</div>
-    <div class="tab" data-tab="tab2">Tab 2</div>
-    <div class="tab" data-tab="tab3">Tab 3</div>
-  </div>
-
-  <!-- Tab Content -->
-  <div class="tab-content active" id="tab1"></div>
-<style>
-  .welcome-screen h1 {
-    font-size: 3rem;
-    color: #58a6ff;
-    text-shadow: 0 4px 10px rgba(88, 166, 255, 0.5);
-    animation: fadeIn 1.5s ease-in-out;
-  }
-
-  .welcome-screen p {
-    font-size: 1.5rem;
-    color: #8b949e;
-    margin-top: 10px;
-    animation: fadeIn 1.5s ease-in-out;
-    animation-delay: 0.5s;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
+  <title>CodeAura Interactive</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --fg: #c9d1d9;
+      --accent: #58a6ff;
+      --accent2: #1f6feb;
     }
-    to {
-      opacity: 1;
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background: var(--bg); color: var(--fg); font-family: Arial, sans-serif; }
+    a { color: var(--accent); text-decoration:none; }
+    a:hover { color: var(--accent2); }
+
+    /* Welcome & Loader */
+    #welcome, #loader {
+      position: fixed; inset: 0;
+      display: flex; justify-content: center; align-items: center;
+      background: var(--bg); transition: opacity 0.5s ease;
+      z-index: 1000;
     }
-  }
-
-  @keyframes fadeOut {
-    from {
-      opacity: 1;
+    #loader { display: none; }
+    #welcome h1 { font-size: 3rem; text-shadow: 0 4px 10px rgba(88,166,255,0.5); animation: fadeIn 1.5s ease-in-out; }
+    #welcome p { font-size: 1.5rem; color: #8b949e; animation: fadeIn 1.5s ease-in-out .5s; }
+    @keyframes fadeIn { from { opacity:0 } to { opacity:1 } }
+    .spinner {
+      border: 4px solid var(--fg);
+      border-top: 4px solid var(--accent);
+      border-radius: 50%;
+      width: 50px; height: 50px;
+      animation: spin 1s linear infinite;
     }
-    to {
-      opacity: 0;
-      visibility: hidden;
+    @keyframes spin { to { transform: rotate(360deg) } }
+
+    /* Header */
+    header { text-align:center; padding:20px; position: relative; }
+    header a { display:inline-block; margin-top:10px; padding:10px 20px; background:var(--accent); color:var(--bg); border-radius:5px; transition: background 0.3s }
+    header a:hover { background: var(--accent2) }
+    .auth-btn { position:absolute; top:20px; right:20px; padding:8px 12px; background:var(--accent); border:none; border-radius:4px; cursor:pointer; }
+
+    /* Tabs */
+    .tabs { display:flex; justify-content:center; margin:20px 0; }
+    .tab { padding:10px 20px; margin:0 5px; background:#161b22; color:var(--fg); border-radius:5px; cursor:pointer; transition: background 0.3s; }
+    .tab.active, .tab:hover { background: var(--accent2); color: var(--bg); }
+    .tab-content { display:none; text-align:center; padding:20px; }
+    .tab-content.active { display:block; }
+    .tab-content h2 { font-size:2rem; color:var(--accent); margin-bottom:10px; }
+    .tab-content p { font-size:1.2rem; color:#8b949e; }
+
+    /* Modal */
+    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); justify-content:center; align-items:center; z-index:2000; }
+    .modal.active { display:flex; }
+    .modal-content {
+      background:#161b22; padding:20px; border-radius:8px; width:90%; max-width:360px; text-align:center;
     }
-  }
-
-  /* Loading Screen */
-  .loading-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-  }
-
-  .loading-screen.active {
-    display: flex;
-  }
-
-  .loading-screen .spinner {
-    border: 4px solid #c9d1d9;
-    border-top: 4px solid #58a6ff;
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    animation: spin 1s linear infinite;
-  }
-
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
+    .modal-content h2 { color: var(--accent); margin-bottom:15px; }
+    .modal-content input, .modal-content button {
+      width:100%; margin:8px 0; padding:10px; border:none; border-radius:5px;
     }
-    to {
-      transform: rotate(360deg);
-    }
-  }
+    .modal-content input { background:#0d1117; color:var(--fg); }
+    .modal-content button { background:var(--accent); color:var(--bg); font-weight:bold; cursor:pointer; transition: background 0.3s; }
+    .modal-content button:hover { background:var(--accent2); }
 
-  /* Header */
-  header {
-    text-align: center;
-    margin: 20px 0;
-  }
-
-  header h1 {
-    font-size: 2.5rem;
-    color: #58a6ff;
-  }
-
-  header p {
-    font-size: 1.2rem;
-    color: #8b949e;
-  }
-
-  header a {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 10px 20px;
-    background-color: #58a6ff;
-    color: #0d1117;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-    transition: background-color 0.3s ease;
-  }
-
-  header a:hover {
-    background-color: #1f6feb;
-  }
-
-  /* Tabs */
-  .tabs {
-    display: flex;
-    justify-content: center;
-    margin: 20px 0;
-  }
-
-  .tab {
-    padding: 10px 20px;
-    margin: 0 5px;
-    background-color: #21262d;
-    color: #c9d1d9;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .tab.active {
-    background-color: #58a6ff;
-    color: #0d1117;
-  }
-
-  .tab:hover {
-    background-color: #1f6feb;
-  }
-
-  .tab-content {
-    display: none;
-    text-align: center;
-    margin: 20px;
-  }
-
-  .tab-content.active {
-    display: block;
-  }
-
-  .tab-content h2 {
-    font-size: 2rem;
-    color: #58a6ff;
-    margin-bottom: 10px;
-  }
-
-  .tab-content p {
-    font-size: 1.2rem;
-    color: #8b949e;
-  }
-
-  /* Form Container */
-  .form-container {
-    margin: 20px 0;
-    text-align: center;
-  }
-
-  .form-container button {
-    margin: 5px;
-    padding: 10px 20px;
-    background-color: #58a6ff;
-    color: #0d1117;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .form-container button:hover {
-    background-color: #1f6feb;
-  }
-
-  /* Modals */
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-
-  .modal.active {
-    display: flex;
-  }
-
-  .modal-content {
-    background-color: #21262d;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 90%;
-    max-width: 400px;
-  }
-
-  .modal-content h2 {
-    font-size: 1.8rem;
-    color: #58a6ff;
-    margin-bottom: 20px;
-  }
-
-  .modal-content input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #30363d;
-    border-radius: 5px;
-    background-color: #0d1117;
-    color: #c9d1d9;
-  }
-
-  .modal-content button {
-    margin: 5px;
-    padding: 10px 20px;
-    background-color: #58a6ff;
-    color: #0d1117;
-    border: none;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .modal-content button:hover {
-    background-color: #1f6feb;
-  }
+    /* Profile */
+    #profile-msg { color: var(--fg); }
   </style>
 </head>
 <body>
+  <div id="welcome">
+    <div>
+      <h1>Welcome to CodeAura</h1>
+      <p>Loading your experience...</p>
+    </div>
+  </div>
+  <div id="loader"><div class="spinner"></div></div>
+
+  <header>
+    <h1>CodeAura Interactive</h1>
+    <p>Explore the interactive features below</p>
+    <a href="#tabs">Get Started</a>
+    <button class="auth-btn" id="open-auth">Login/Register</button>
+  </header>
+
+  <div class="tabs" id="tabs">
+    <div class="tab active" data-tab="home">Home</div>
+    <div class="tab" data-tab="features">Features</div>
+    <div class="tab" data-tab="profile">Profile</div>
+  </div>
+
+  <div class="tab-content active" id="home">
+    <h2>Home</h2>
+    <p>Welcome to the dark side of CodeAura!</p>
+  </div>
+  <div class="tab-content" id="features">
+    <h2>Features</h2>
+    <p>Dark theme, tabs, modals, and client-side login/register.</p>
+  </div>
+  <div class="tab-content" id="profile">
+    <h2>Profile</h2>
+    <p id="profile-msg">Please log in to view your profile.</p>
+  </div>
+
+  <!-- Auth Modal -->
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h2 id="modal-title">Login</h2>
+      <input type="text" id="username" placeholder="Username" required>
+      <input type="password" id="password" placeholder="Password" required>
+      <button id="auth-submit">Submit</button>
+      <button id="toggle-auth">Switch to Register</button>
+      <button id="close-modal">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Welcome & Loader
+    const welcome = document.getElementById('welcome'),
+          loader  = document.getElementById('loader');
+    setTimeout(() => {
+      welcome.style.opacity = '0';
+      setTimeout(() => {
+        welcome.style.display = 'none';
+        loader.style.display = 'flex';
+        setTimeout(() => loader.style.display = 'none', 1500);
+      }, 500);
+    }, 2000);
+
+    // Tabs
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        document.querySelectorAll('.tab, .tab-content').forEach(el => el.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Auth logic with localStorage
+    const modal = document.getElementById('modal'),
+          openAuthBtn = document.getElementById('open-auth'),
+          closeBtn = document.getElementById('close-modal'),
+          toggleBtn = document.getElementById('toggle-auth'),
+          submitBtn = document.getElementById('auth-submit'),
+          titleH2 = document.getElementById('modal-title'),
+          userInput = document.getElementById('username'),
+          passInput = document.getElementById('password'),
+          profileMsg = document.getElementById('profile-msg');
+
+    let isLogin = true;
+    openAuthBtn.addEventListener('click', ()=> modal.classList.add('active'));
+    closeBtn.addEventListener('click', ()=> modal.classList.remove('active'));
+
+    toggleBtn.addEventListener('click', () => {
+      isLogin = !isLogin;
+      titleH2.innerText = isLogin ? 'Login' : 'Register';
+      toggleBtn.innerText = isLogin ? 'Switch to Register' : 'Switch to Login';
+    });
+
+    function getUsers() {
+      return JSON.parse(localStorage.getItem('ca_users') || '{}');
+    }
+    function saveUsers(u) {
+      localStorage.setItem('ca_users', JSON.stringify(u));
+    }
+    function setSession(user) {
+      localStorage.setItem('ca_session', user);
+    }
+    function getSession() {
+      return localStorage.getItem('ca_session');
+    }
+    function clearSession() {
+      localStorage.removeItem('ca_session');
+    }
+
+    submitBtn.addEventListener('click', () => {
+      const u = userInput.value.trim(), p = passInput.value;
+      if (!u || !p) return alert('Both fields are required.');
+      let users = getUsers();
+      if (isLogin) {
+        if (users[u] && users[u] === p) {
+          setSession(u);
+          alert('Logged in!');
+        } else {
+          return alert('Invalid credentials');
+        }
+      } else {
+        if (users[u]) return alert('Username taken');
+        users[u] = p;
+        saveUsers(users);
+        setSession(u);
+        alert('Registered and logged in!');
+      }
+      modal.classList.remove('active');
+      refreshProfile();
+    });
+
+    function refreshProfile() {
+      const user = getSession();
+      if (user) {
+        profileMsg.innerText = `Hello, ${user}!`;
+        openAuthBtn.innerText = 'Logout';
+        openAuthBtn.onclick = () => {
+          clearSession();
+          profileMsg.innerText = 'Please log in to view your profile.';
+          openAuthBtn.innerText = 'Login/Register';
+          openAuthBtn.onclick = ()=> modal.classList.add('active');
+        };
+      } else {
+        profileMsg.innerText = 'Please log in to view your profile.';
+        openAuthBtn.innerText = 'Login/Register';
+        openAuthBtn.onclick = ()=> modal.classList.add('active');
+      }
+    }
+
+    // On load
+    refreshProfile();
+  </script>
+</body>
+</html>
