@@ -321,33 +321,95 @@
     </div>
   </div>
 
-  <script>
-    function toggleModal(type) {
-      const modal = document.getElementById(`${type}-modal`);
-      modal.classList.toggle("active");
+<script>
+  function toggleModal(type) {
+    const modal = document.getElementById(`${type}-modal`);
+    modal.classList.toggle("active");
+  }
+
+  function switchTab(index) {
+    document.querySelectorAll('.tab').forEach((el, i) => el.classList.toggle('active', i === index));
+    document.querySelectorAll('.tab-content').forEach((el, i) => el.classList.toggle('active', i === index));
+  }
+
+  function addPost(event) {
+    event.preventDefault();
+    const text = document.getElementById("post-text").value.trim();
+    if (!text) return;
+
+    const username = localStorage.getItem("loggedInUser") || "Anonymous";
+    const post = document.createElement("div");
+    post.className = "post";
+    post.innerHTML = `
+      <div class="user">${username}</div>
+      <div class="content">${text}</div>
+      <div class="controls">
+        <button onclick="this.closest('.post').remove()">Delete</button>
+      </div>
+    `;
+    document.getElementById("posts").prepend(post);
+    document.getElementById("post-text").value = "";
+  }
+
+  // --- Register logic ---
+  const registerBtn = document.querySelector('#register-modal button');
+  registerBtn.addEventListener('click', () => {
+    const inputs = document.querySelectorAll('#register-modal input');
+    const username = inputs[0].value.trim();
+    const password = inputs[1].value.trim();
+
+    if (!username || !password) {
+      alert("Fill in all fields");
+      return;
     }
 
-    function switchTab(index) {
-      document.querySelectorAll('.tab').forEach((el, i) => el.classList.toggle('active', i === index));
-      document.querySelectorAll('.tab-content').forEach((el, i) => el.classList.toggle('active', i === index));
-    }
+    localStorage.setItem("user_" + username, password);
+    alert("Registered! You can now log in.");
+    toggleModal('register');
+  });
 
-    function addPost(event) {
-      event.preventDefault();
-      const text = document.getElementById("post-text").value.trim();
-      if (!text) return;
-      const post = document.createElement("div");
-      post.className = "post";
-      post.innerHTML = `
-        <div class="user">Anonymous</div>
-        <div class="content">${text}</div>
-        <div class="controls">
-          <button onclick="this.closest('.post').remove()">Delete</button>
-        </div>
+  // --- Login logic ---
+  const loginBtn = document.querySelector('#login-modal button');
+  loginBtn.addEventListener('click', () => {
+    const inputs = document.querySelectorAll('#login-modal input');
+    const username = inputs[0].value.trim();
+    const password = inputs[1].value.trim();
+
+    const storedPassword = localStorage.getItem("user_" + username);
+
+    if (storedPassword === password) {
+      localStorage.setItem("loggedInUser", username);
+      updateUI();
+      toggleModal('login');
+    } else {
+      alert("Invalid username or password");
+    }
+  });
+
+  function updateUI() {
+    const user = localStorage.getItem("loggedInUser");
+    const header = document.querySelector('header');
+
+    if (user) {
+      header.innerHTML = `
+        <h1>CodeAura Interactive</h1>
+        <p>Modern Reddit/X Style Forum</p>
+        <p id="profile-msg">Welcome, <strong>${user}</strong></p>
+        <button class="auth-btn" onclick="logout()">Logout</button>
       `;
-      document.getElementById("posts").prepend(post);
-      document.getElementById("post-text").value = "";
     }
-  </script>
+  }
+
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    location.reload();
+  }
+
+  // Update UI on load
+  document.addEventListener("DOMContentLoaded", () => {
+    updateUI();
+  });
+</script>
+
 </body>
 </html>
